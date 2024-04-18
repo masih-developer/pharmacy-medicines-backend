@@ -1,11 +1,5 @@
-const express = require("express");
 const mongoose = require("mongoose");
-
-const app = express();
-
-app.get("/", (req, res) => {
-  res.send("hello from app backend");
-});
+const app = require("./app");
 
 mongoose
   .connect("mongodb://127.0.0.1/pharmacy-medicines")
