@@ -12,6 +12,7 @@ mongoose
       console.log(`🚀Server Runnded on port ${APP_PORT}`);
     });
   })
-  .catch(() => {
+  .catch((error) => {
+    console.log(error);
     console.log("❌Connected To Db Failed :)");
   });
