@@ -13,6 +13,8 @@ const medicineSchema = new Schema(
     code: {
       type: Number,
       required: true,
+      index: true,
+      unique: true,
     },
     quantity: {
       type: Number,
