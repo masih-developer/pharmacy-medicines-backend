@@ -25,6 +25,11 @@ const medicineSchema = new Schema(
     type: {
       type: String,
     },
+    isHide: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
   { timestamps: true }
 );
