@@ -2,11 +2,14 @@ const express = require("express");
 const {
   createMedicine,
   readMedicineFromXlsx,
+  getAllMedicines,
 } = require("../controllers/medicine");
 const multer = require("multer");
 
 const upload = multer();
 const router = express.Router();
+
+router.get("/", getAllMedicines);
 
 router.post("/", createMedicine);
 

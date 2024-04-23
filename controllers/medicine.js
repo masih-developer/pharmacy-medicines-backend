@@ -2,6 +2,18 @@ const MedicineModel = require("../models/medicine");
 const xlsx = require("xlsx");
 const { randomDate } = require("../utils");
 
+const getAllMedicines = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query;
+  const medicines = await MedicineModel.find({})
+    .limit(limit)
+    .skip((page - 1) * limit)
+    .sort({ createdAt: -1 });
+
+  const totalPage = Math.ceil((await MedicineModel.countDocuments()) / limit);
+
+  res.json({ medicines, totalPage, currentPage: page });
+};
+
 const createMedicine = async (req, res) => {
   const medicine = req.body;
   try {
@@ -58,4 +70,4 @@ const readMedicineFromXlsx = async (req, res) => {
   }
 };
 
-module.exports = { createMedicine, readMedicineFromXlsx };
+module.exports = { createMedicine, readMedicineFromXlsx, getAllMedicines };
