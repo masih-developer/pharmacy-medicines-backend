@@ -8,7 +8,7 @@ const registerUser = async (req, res, next) => {
     const { firstname, lastname, username, email, password } =
       await registerSchema.validate(req.body, { abortEarly: false });
 
-    const isUserExist = await UserModel.find({
+    const isUserExist = await UserModel.findOne({
       $or: [{ username }, { email }],
     });
 
