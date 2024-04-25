@@ -2,6 +2,7 @@ const express = require("express");
 
 // import routes
 const medicineRoutes = require("./routes/medicine");
+const userRoutes = require("./routes/user");
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(express.json());
 
 // routes handling
 app.use("/api/medicines", medicineRoutes);
+app.use("/api/user", userRoutes);
 
 // Not Found Route
 app.use((req, res) => {
