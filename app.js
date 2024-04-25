@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 
 // import routes
 const medicineRoutes = require("./routes/medicine.routes");
@@ -8,6 +9,7 @@ const app = express();
 
 // body parser
 app.use(express.json());
+app.use(cookieParser());
 
 // routes handling
 app.use("/api/medicines", medicineRoutes);
