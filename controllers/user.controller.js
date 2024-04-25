@@ -1,46 +1,50 @@
+const cookieParser = require("cookie-parser");
+const createHttpError = require("http-errors");
+const jwt = require("jsonwebtoken");
 const UserModel = require("../models/user.model");
-const { registerSchema } = require("../validators/auth/index");
-const Yup = require("yup");
-const bcrypt = require("bcrypt");
 
-const registerUser = async (req, res, next) => {
+const verifyAccessToken = async (req, res, next) => {
   try {
-    const { firstname, lastname, username, email, password } =
-      await registerSchema.validate(req.body, { abortEarly: false });
-
-    const isUserExist = await UserModel.findOne({
-      $or: [{ username }, { email }],
-    });
-
-    if (isUserExist) {
-      res.status(409).json({ message: "this user already registered" });
-      return;
+    const accessToken = req.signedCookies["accessToken"];
+    if (!accessToken) {
+      throw createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید.");
     }
-
-    const hashedPass = await bcrypt.hash(password, 12);
-
-    const user = await UserModel.create({
-      firstname,
-      lastname,
-      username,
-      email,
-      password: hashedPass,
-    });
-
-    res.json(user);
+    const token = cookieParser.signedCookie(
+      accessToken,
+      process.env.COOKIE_PARSER_SECRET_KEY
+    );
+    jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET_KEY,
+      async (err, payload) => {
+        try {
+          if (err) throw createHttpError.Unauthorized("توکن نامعتبر است");
+          const { email } = payload;
+          const user = await UserModel.findOne(email);
+          if (!user) throw createHttpError.Unauthorized("حساب کاربری یافت نشد");
+          req.user = user;
+          return next();
+        } catch (error) {
+          next(error);
+        }
+      }
+    );
   } catch (error) {
-    if (error instanceof Yup.ValidationError) {
-      res.status(422).json({ message: error.errors[0] });
-    }
+    next(error);
   }
 };
 
-const loginUser = (req, res) => {
-  res.json({ message: "user login successfully!" });
+const decideAuthMiddleware = (req, res, next) => {
+  const accessToken = req.signedCookies["accessToken"];
+  if (accessToken) {
+    return verifyAccessToken(req, res, next);
+  }
+  // skip this middleware
+  next();
 };
 
-const getMeUser = (req, res) => {
-  res.json({ message: "get user information successfully!" });
+module.exports = {
+  verifyAccessToken,
+  decideAuthMiddleware,
+  isVerifiedUser,
 };
-
-module.exports = { registerUser, loginUser, getMeUser };
