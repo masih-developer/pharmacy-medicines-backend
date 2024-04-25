@@ -1,8 +1,8 @@
 const express = require("express");
 
 // import routes
-const medicineRoutes = require("./routes/medicine");
-const userRoutes = require("./routes/user");
+const medicineRoutes = require("./routes/medicine.routes");
+const userRoutes = require("./routes/user.routes");
 
 const app = express();
 

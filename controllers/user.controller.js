@@ -1,4 +1,4 @@
-const UserModel = require("../models/user");
+const UserModel = require("../models/user.model");
 const { registerSchema } = require("../validators/auth/index");
 const Yup = require("yup");
 const bcrypt = require("bcrypt");

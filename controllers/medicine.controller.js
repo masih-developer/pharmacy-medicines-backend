@@ -1,4 +1,4 @@
-const MedicineModel = require("../models/medicine");
+const MedicineModel = require("../models/medicine.model");
 const xlsx = require("xlsx");
 const { randomDate } = require("../utils");
 

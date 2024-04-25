@@ -3,7 +3,7 @@ const {
   createMedicine,
   readMedicineFromXlsx,
   getAllMedicines,
-} = require("../controllers/medicine");
+} = require("../controllers/medicine.controller");
 const multer = require("multer");
 
 const upload = multer();
