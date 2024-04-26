@@ -2,6 +2,7 @@ const UserModel = require("../models/user.model");
 const { registerSchema } = require("../validators/auth/index");
 const Yup = require("yup");
 const bcrypt = require("bcrypt");
+const { setAccessToken, setRefreshToken } = require("../utils/auth");
 
 const registerUser = async (req, res, next) => {
   try {
@@ -26,6 +27,9 @@ const registerUser = async (req, res, next) => {
       email,
       password: hashedPass,
     });
+
+    await setAccessToken(res, user);
+    await setRefreshToken(res, user);
 
     res.json(user);
   } catch (error) {
