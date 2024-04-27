@@ -4,7 +4,7 @@ const Yup = require("yup");
 const bcrypt = require("bcrypt");
 const { setAccessToken, setRefreshToken } = require("../utils/auth");
 
-const registerUser = async (req, res, next) => {
+const registerUser = async (req, res) => {
   try {
     const { firstname, lastname, username, email, password } =
       await registerSchema.validate(req.body, { abortEarly: false });
