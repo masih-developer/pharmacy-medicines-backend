@@ -1,6 +1,6 @@
 const cookieParser = require("cookie-parser");
 const createHttpError = require("http-errors");
-const JWT = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const UserModel = require("../models/user.model");
 
 async function verifyAccessToken(req, res, next) {
@@ -13,7 +13,7 @@ async function verifyAccessToken(req, res, next) {
       accessToken,
       process.env.COOKIE_PARSER_SECRET_KEY
     );
-    JWT.verify(
+    jwt.verify(
       token,
       process.env.ACCESS_TOKEN_SECRET_KEY,
       async (err, payload) => {
@@ -51,14 +51,10 @@ function verifyRefreshToken(req) {
         try {
           if (err)
             reject(createError.Unauthorized("لطفا وارد حساب کاربری خود شوید."));
-          const { _id } = payload;
-          const user = await UserModel.findById(_id, {
-            password: 0,
-            otp: 0,
-            resetLink: 0,
-          });
+          const { email } = payload;
+          const user = await UserModel.findOne({ email });
           if (!user) reject(createError.Unauthorized("حساب کاربری یافت نشد."));
-          return resolve(_id);
+          return resolve(email);
         } catch (error) {
           reject(createError.Unauthorized("حساب کاربری یافت نشد."));
         }
