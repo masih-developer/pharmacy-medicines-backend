@@ -4,6 +4,7 @@ const Yup = require("yup");
 const bcrypt = require("bcrypt");
 const createHttpError = require("http-errors");
 const { setAccessToken, setRefreshToken } = require("../utils/auth");
+const { verifyRefreshToken } = require("../middleware/auth.middleware");
 
 const registerUser = async (req, res) => {
   const { firstname, lastname, username, email, password } =
@@ -49,4 +50,17 @@ const getMeUser = (req, res) => {
   res.json({ message: "get user information successfully!" });
 };
 
-module.exports = { registerUser, loginUser, getMeUser };
+const getRefreshToken = async (req, res) => {
+  const userEmail = await verifyRefreshToken(req);
+  const user = await UserModel.findOne({ userEmail });
+  await setAccessToken(res, user);
+  await setRefreshToken(res, user);
+  return res.status(200).json({
+    StatusCode: 200,
+    data: {
+      user,
+    },
+  });
+};
+
+module.exports = { registerUser, loginUser, getMeUser, getRefreshToken };
