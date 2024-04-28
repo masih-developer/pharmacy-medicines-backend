@@ -12,6 +12,6 @@ router.post("/register", expressAsyncHandler(registerUser));
 
 router.post("/login", expressAsyncHandler(loginUser));
 
-router.get("/me", express(getMeUser));
+router.get("/me", expressAsyncHandler(getMeUser));
 
 module.exports = router;
