@@ -5,14 +5,20 @@ const {
   getAllMedicines,
 } = require("../controllers/medicine.controller");
 const multer = require("multer");
+const { verifyAccessToken } = require("../middleware/auth.middleware");
+const expressAsyncHandler = require("express-async-handler");
 
 const upload = multer();
 const router = express.Router();
 
-router.get("/", getAllMedicines);
+router.get("/", verifyAccessToken, expressAsyncHandler(getAllMedicines));
 
-router.post("/", createMedicine);
+router.post("/", verifyAccessToken, expressAsyncHandler(createMedicine));
 
-router.post("/file", upload.single("excel"), readMedicineFromXlsx);
+router.post(
+  "/file",
+  upload.single("excel"),
+  expressAsyncHandler(readMedicineFromXlsx)
+);
 
 module.exports = router;
