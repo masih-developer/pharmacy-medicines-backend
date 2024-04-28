@@ -1,46 +1,48 @@
 const UserModel = require("../models/user.model");
-const { registerSchema } = require("../validators/auth/index");
+const { registerSchema, loginSchema } = require("../validators/auth/index");
 const Yup = require("yup");
 const bcrypt = require("bcrypt");
+const createHttpError = require("http-errors");
 const { setAccessToken, setRefreshToken } = require("../utils/auth");
 
 const registerUser = async (req, res) => {
-  try {
-    const { firstname, lastname, username, email, password } =
-      await registerSchema.validate(req.body, { abortEarly: false });
+  const { firstname, lastname, username, email, password } =
+    await registerSchema.validate(req.body, { abortEarly: false });
 
-    const isUserExist = await UserModel.findOne({
-      $or: [{ username }, { email }],
-    });
+  const isUserExist = await UserModel.findOne({
+    $or: [{ username }, { email }],
+  });
 
-    if (isUserExist) {
-      res.status(409).json({ message: "this user already registered" });
-      return;
-    }
-
-    const hashedPass = await bcrypt.hash(password, 12);
-
-    const user = await UserModel.create({
-      firstname,
-      lastname,
-      username,
-      email,
-      password: hashedPass,
-    });
-
-    await setAccessToken(res, user);
-    await setRefreshToken(res, user);
-
-    res.json(user);
-  } catch (error) {
-    if (error instanceof Yup.ValidationError) {
-      res.status(422).json({ message: error.errors[0] });
-    }
+  if (isUserExist) {
+    throw createHttpError.Conflict("this user already registered");
   }
+
+  const hashedPass = await bcrypt.hash(password, 12);
+
+  const user = await UserModel.create({
+    // firstname,
+    lastname,
+    username,
+    email,
+    password: hashedPass,
+  });
+
+  await setAccessToken(res, user);
+  await setRefreshToken(res, user);
+
+  res.json(user);
 };
 
-const loginUser = (req, res) => {
-  res.json({ message: "user login successfully!" });
+const loginUser = async (req, res) => {
+  const { email } = await loginSchema.validate(req.body);
+  const user = await UserModel.findOne({ email });
+  if (!user)
+    throw createHttpError.NotFound(
+      "user not found, email or password is incorrect!"
+    );
+  await setAccessToken(res, user);
+  await setRefreshToken(res, user);
+  res.json(user);
 };
 
 const getMeUser = (req, res) => {
