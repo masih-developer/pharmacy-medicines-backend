@@ -9,7 +9,7 @@ const app = express();
 
 // body parser
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY));
 
 // routes handling
 app.use("/api/medicines", medicineRoutes);
