@@ -5,6 +5,7 @@ const setAccessToken = async (res, user) => {
   const cookieOptions = {
     maxAge: 1000 * 60 * 60 * 24 * 1, // would expire after 1 days
     httpOnly: true, // The cookie only accessible by the web server
+    signed: true,
     sameSite: "Lax",
     secure: process.env.NODE_ENV === "development" ? false : true,
     domain:
@@ -12,17 +13,19 @@ const setAccessToken = async (res, user) => {
         ? "localhost"
         : ".pharmacydomain.ir",
   };
-  await res.cookie(
-    "accessToken",
-    await generateToken(user, "24h", process.env.ACCESS_TOKEN_SECRET_KEY),
-    cookieOptions
+  const token = await generateToken(
+    user,
+    "24h",
+    process.env.ACCESS_TOKEN_SECRET_KEY
   );
+  res.cookie("accessToken", token, cookieOptions);
 };
 
 const setRefreshToken = async (res, user) => {
   const cookieOptions = {
     maxAge: 1000 * 60 * 60 * 24 * 365, // would expire after 1 year
     httpOnly: true, // The cookie only accessible by the web server
+    signed: true,
     sameSite: "Lax",
     secure: process.env.NODE_ENV === "development" ? false : true,
     domain:
@@ -30,11 +33,12 @@ const setRefreshToken = async (res, user) => {
         ? "localhost"
         : ".pharmacydomain.ir",
   };
-  res.cookie(
-    "refreshToken",
-    await generateToken(user, "1y", process.env.REFRESH_TOKEN_SECRET_KEY),
-    cookieOptions
+  const token = await generateToken(
+    user,
+    "1y",
+    process.env.REFRESH_TOKEN_SECRET_KEY
   );
+  res.cookie("refreshToken", token, cookieOptions);
 };
 
 const generateToken = (user, expiresIn, secret) => {
