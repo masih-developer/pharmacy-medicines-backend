@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const createError = require("http-errors");
 
 // import routes
 const medicineRoutes = require("./routes/medicine.routes");
@@ -16,9 +17,19 @@ app.use("/api/medicines", medicineRoutes);
 app.use("/api/user", userRoutes);
 
 // Not Found Route
-app.use((req, res) => {
-  console.log("this path is not available:", req.path);
-  res.status(404).json({ message: "404 OOPS! PATH NOT FOUND" });
+app.use((req, res, next) => {
+  next(createError.NotFound("آدرس مورد نظر یافت نشد."));
+});
+
+app.use((error, req, res, next) => {
+  const serverError = createError.InternalServerError();
+  const statusCode =
+    error.name === "ValidationError" ? 422 : error.status || serverError.status;
+  const message = error.message || serverError.message;
+  return res.status(statusCode).json({
+    statusCode,
+    message,
+  });
 });
 
 module.exports = app;
