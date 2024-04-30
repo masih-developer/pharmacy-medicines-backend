@@ -22,12 +22,21 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  console.log(error);
-  const serverError = createError.InternalServerError();
-  const statusCode =
-    error.name === "ValidationError" ? 422 : error.status || serverError.status;
-  const message = error.message || serverError.message;
-  return res.status(statusCode).json({
+  console.error(error);
+
+  let statusCode;
+  let message;
+
+  if (error.name === "ValidationError") {
+    statusCode = 422;
+    message = error.errors[0];
+  } else {
+    const serverError = createError.InternalServerError();
+    statusCode = error.status || serverError.status;
+    message = error.message || serverError.message;
+  }
+
+  res.status(statusCode).json({
     statusCode,
     message,
   });
