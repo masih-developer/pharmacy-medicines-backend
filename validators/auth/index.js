@@ -9,10 +9,10 @@ const registerSchema = Yup.object({
     .max(20, "lastname must be maximum 20 character"),
   username: Yup.string()
     .required("Username is required")
-    .min(3, "Username must be at least 3 characters")
+    .min(4, "Username must be at least 3 characters")
     .max(20, "Username cannot exceed 20 characters")
     .matches(
-      /^\w+$/,
+      /^[a-z-A-Z]\w+$/,
       "Username can only contain letters, numbers, or underscores"
     )
     .lowercase("Username must be lowercase"),
