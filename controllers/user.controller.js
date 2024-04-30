@@ -1,6 +1,5 @@
 const UserModel = require("../models/user.model");
 const { registerSchema, loginSchema } = require("../validators/auth/index");
-const Yup = require("yup");
 const bcrypt = require("bcrypt");
 const createHttpError = require("http-errors");
 const { setAccessToken, setRefreshToken } = require("../utils/auth");
@@ -51,15 +50,12 @@ const getMeUser = (req, res) => {
 };
 
 const getRefreshToken = async (req, res) => {
-  const userEmail = await verifyRefreshToken(req);
-  const user = await UserModel.findOne({ userEmail });
+  const user = await verifyRefreshToken(req);
   await setAccessToken(res, user);
   await setRefreshToken(res, user);
   return res.status(200).json({
     StatusCode: 200,
-    data: {
-      user,
-    },
+    user,
   });
 };
 
