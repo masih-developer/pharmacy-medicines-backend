@@ -50,13 +50,16 @@ function verifyRefreshToken(req) {
       async (err, payload) => {
         try {
           if (err)
-            reject(createError.Unauthorized("لطفا وارد حساب کاربری خود شوید."));
+            reject(
+              createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید.")
+            );
           const { email } = payload;
           const user = await UserModel.findOne({ email });
-          if (!user) reject(createError.Unauthorized("حساب کاربری یافت نشد."));
-          return resolve(email);
+          if (!user)
+            reject(createHttpError.Unauthorized("حساب کاربری یافت نشد."));
+          return resolve(user);
         } catch (error) {
-          reject(createError.Unauthorized("حساب کاربری یافت نشد."));
+          reject(createHttpError.NotFound("حساب کاربری یافت نشد."));
         }
       }
     );
