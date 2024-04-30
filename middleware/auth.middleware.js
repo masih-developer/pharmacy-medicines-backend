@@ -37,7 +37,7 @@ async function verifyAccessToken(req, res, next) {
 function verifyRefreshToken(req) {
   const refreshToken = req.signedCookies["refreshToken"];
   if (!refreshToken) {
-    throw createError.Unauthorized("لطفا وارد حساب کاربری خود شوید.");
+    throw createHttpError.Unauthorized("لطفا وارد حساب کاربری خود شوید.");
   }
   const token = cookieParser.signedCookie(
     refreshToken,
