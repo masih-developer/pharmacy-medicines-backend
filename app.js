@@ -1,12 +1,14 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
-
+const cors = require("cors");
 // import routes
 const medicineRoutes = require("./routes/medicine.routes");
 const userRoutes = require("./routes/user.routes");
 
 const app = express();
+
+app.use(cors({ credentials: true, origin: process.env.ALLOW_CORS_ORIGIN }));
 
 // body parser
 app.use(express.json());
