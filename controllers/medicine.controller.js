@@ -39,10 +39,10 @@ const readMedicineFromXlsx = async (req, res) => {
     data = data.map((med) => {
       return {
         name: med["نام کالا"] || "",
-        expire: randomDate().toISOString() || "",
-        code: med["کد کالا"] || "",
-        quantity: med["کل موجودي"] !== undefined ? med["کل موجودي"] : "",
-        price: med["قيمت1"] || "",
+        expire: randomDate().toISOString(),
+        code: med["کد کالا"] || 0,
+        quantity: med["کل موجودي"] !== undefined ? med["کل موجودي"] : 0,
+        price: med["قيمت1"] || 0,
         type: med["واحد اصلي"] || "",
       };
     });
