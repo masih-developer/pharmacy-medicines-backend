@@ -42,7 +42,7 @@ const loginUser = async (req, res) => {
     );
   await setAccessToken(res, user);
   await setRefreshToken(res, user);
-  res.json(user);
+  res.json({ user, message: "ورود با موفقیت انجام شد." });
 };
 
 const getMeUser = (req, res) => {
