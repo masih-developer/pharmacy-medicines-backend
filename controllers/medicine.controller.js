@@ -9,9 +9,11 @@ const getAllMedicines = async (req, res) => {
     .skip((page - 1) * limit)
     .sort({ createdAt: -1 });
 
-  const totalPage = Math.ceil((await MedicineModel.countDocuments()) / limit);
+  const totalDocument = await MedicineModel.countDocuments();
 
-  res.json({ medicines, totalPage, currentPage: page });
+  const totalPage = Math.ceil(totalDocument / limit);
+
+  res.json({ medicines, totalPage, currentPage: +page });
 };
 
 const createMedicine = async (req, res) => {
