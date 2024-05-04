@@ -3,11 +3,13 @@ const xlsx = require("xlsx");
 const { randomDate } = require("../utils");
 
 const getAllMedicines = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
   const medicines = await MedicineModel.find({})
+    .sort({ createdAt: -1 })
     .limit(limit)
-    .skip((page - 1) * limit)
-    .sort({ createdAt: -1 });
+    .skip((page - 1) * limit);
 
   const totalDocument = await MedicineModel.countDocuments();
 
