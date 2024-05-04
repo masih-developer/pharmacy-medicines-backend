@@ -7,7 +7,7 @@ const getAllMedicines = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
 
   const medicines = await MedicineModel.find({})
-    .sort({ createdAt: -1 })
+    .sort({ _id: -1 })
     .limit(limit)
     .skip((page - 1) * limit);
 
