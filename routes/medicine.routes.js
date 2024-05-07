@@ -3,6 +3,7 @@ const {
   createMedicine,
   readMedicineFromXlsx,
   getAllMedicines,
+  updateMedicine,
 } = require("../controllers/medicine.controller");
 const multer = require("multer");
 const { verifyAccessToken } = require("../middleware/auth.middleware");
@@ -20,5 +21,7 @@ router.post(
   upload.single("excel"),
   expressAsyncHandler(readMedicineFromXlsx)
 );
+
+router.put("/:id", expressAsyncHandler(updateMedicine));
 
 module.exports = router;

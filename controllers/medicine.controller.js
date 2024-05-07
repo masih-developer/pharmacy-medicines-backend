@@ -1,6 +1,8 @@
 const MedicineModel = require("../models/medicine.model");
 const xlsx = require("xlsx");
 const { randomDate } = require("../utils");
+const createHttpError = require("http-errors");
+const { medicineValidationSchema } = require("../validators/medicine");
 
 const getAllMedicines = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -74,4 +76,23 @@ const readMedicineFromXlsx = async (req, res) => {
   }
 };
 
-module.exports = { createMedicine, readMedicineFromXlsx, getAllMedicines };
+const updateMedicine = async (req, res) => {
+  const { id } = req.params;
+  const medicine = await medicineValidationSchema.validate(req.body);
+
+  const updatedMedicine = await MedicineModel.findByIdAndUpdate(id, medicine, {
+    new: true,
+  });
+
+  if (!updatedMedicine)
+    throw createHttpError.NotFound("محصول موردنظر پیدا نشد!");
+
+  res.json(updatedMedicine);
+};
+
+module.exports = {
+  createMedicine,
+  readMedicineFromXlsx,
+  getAllMedicines,
+  updateMedicine,
+};
