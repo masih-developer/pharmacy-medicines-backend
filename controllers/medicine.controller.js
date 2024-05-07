@@ -5,19 +5,25 @@ const createHttpError = require("http-errors");
 const { medicineValidationSchema } = require("../validators/medicine");
 
 const getAllMedicines = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  const { page = 1, limit = 10, search = "" } = req.query;
+  const regexSearch = new RegExp(search, "i");
 
-  const medicines = await MedicineModel.find({})
-    .sort({ _id: -1 })
-    .limit(limit)
-    .skip((page - 1) * limit);
+  try {
+    const medicines = await MedicineModel.find({ name: regexSearch })
+      .sort({ _id: -1 })
+      .limit(parseInt(limit))
+      .skip((parseInt(page) - 1) * parseInt(limit));
 
-  const totalDocument = await MedicineModel.countDocuments();
+    const totalDocuments = await MedicineModel.countDocuments({
+      name: regexSearch,
+    });
+    const totalPage = Math.ceil(totalDocuments / parseInt(limit));
 
-  const totalPage = Math.ceil(totalDocument / limit);
-
-  res.json({ medicines, totalPage, currentPage: +page });
+    res.json({ medicines, totalPage, currentPage: +page });
+  } catch (error) {
+    console.error("Error fetching medicines:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 const createMedicine = async (req, res) => {
