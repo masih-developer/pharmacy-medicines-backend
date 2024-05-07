@@ -21,14 +21,9 @@ const getAllMedicines = async (req, res) => {
 };
 
 const createMedicine = async (req, res) => {
-  const medicine = req.body;
-  try {
-    await MedicineModel.create(medicine);
-    res.status(200).json(medicine);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal Server Error!" });
-  }
+  const medicine = await medicineValidationSchema.validate(req.body);
+  await MedicineModel.create(medicine);
+  res.status(200).json(medicine);
 };
 
 const readMedicineFromXlsx = async (req, res) => {
