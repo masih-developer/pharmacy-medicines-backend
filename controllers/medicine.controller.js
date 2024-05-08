@@ -28,6 +28,9 @@ const getAllMedicines = async (req, res) => {
 
 const createMedicine = async (req, res) => {
   const medicine = await medicineValidationSchema.validate(req.body);
+  const medicineExist = await MedicineModel.findOne({ code: medicine.code });
+  if (medicineExist)
+    throw createHttpError.Conflict("این کد کالا قبلاً ثبت شده است!");
   await MedicineModel.create(medicine);
   res.status(200).json(medicine);
 };
