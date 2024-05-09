@@ -59,4 +59,16 @@ const getRefreshToken = async (req, res) => {
   });
 };
 
-module.exports = { registerUser, loginUser, getMeUser, getRefreshToken };
+const getUserProfile = async (req, res) => {
+  const { _id: id } = req.user;
+  const user = await UserModel.findById(id);
+  res.json(user);
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getMeUser,
+  getRefreshToken,
+  getUserProfile,
+};
