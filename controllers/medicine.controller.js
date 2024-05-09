@@ -3,6 +3,7 @@ const xlsx = require("xlsx");
 const { randomDate } = require("../utils");
 const createHttpError = require("http-errors");
 const { medicineValidationSchema } = require("../validators/medicine");
+const mongoose = require("mongoose");
 
 const getAllMedicines = async (req, res) => {
   const { page = 1, limit = 10, search = "" } = req.query;
@@ -94,9 +95,23 @@ const updateMedicine = async (req, res) => {
   res.json(updatedMedicine);
 };
 
+const deleteMedicine = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.isValidObjectId(id))
+    throw createHttpError("آیدی محصول نامعتبر می باشد!");
+
+  const deletedMedicine = await MedicineModel.findByIdAndDelete(id);
+
+  if (!deletedMedicine)
+    throw createHttpError.NotFound("محصول مورد نظر پیدا نشد!");
+
+  res.json({ message: "محصول مورد نظر با موفقیت حذف گردید." });
+};
+
 module.exports = {
   createMedicine,
   readMedicineFromXlsx,
   getAllMedicines,
   updateMedicine,
+  deleteMedicine,
 };

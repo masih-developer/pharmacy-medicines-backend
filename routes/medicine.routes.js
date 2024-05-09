@@ -4,6 +4,7 @@ const {
   readMedicineFromXlsx,
   getAllMedicines,
   updateMedicine,
+  deleteMedicine,
 } = require("../controllers/medicine.controller");
 const multer = require("multer");
 const { verifyAccessToken } = require("../middleware/auth.middleware");
@@ -23,5 +24,7 @@ router.post(
 );
 
 router.put("/:id", expressAsyncHandler(updateMedicine));
+
+router.delete("/:id", expressAsyncHandler(deleteMedicine));
 
 module.exports = router;
