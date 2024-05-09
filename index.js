@@ -5,7 +5,7 @@ const app = require("./app");
 const APP_PORT = process.env.PORT || 3000;
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/pharmacy-medicines")
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("✅Connected To Db Successfully :)");
     app.listen(APP_PORT, () => {
