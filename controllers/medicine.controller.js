@@ -83,6 +83,10 @@ const readMedicineFromXlsx = async (req, res) => {
 
 const updateMedicine = async (req, res) => {
   const { id } = req.params;
+
+  if (!mongoose.isValidObjectId(id))
+    throw createHttpError("آیدی محصول نامعتبر می باشد!");
+
   const medicine = await medicineValidationSchema.validate(req.body);
 
   const updatedMedicine = await MedicineModel.findByIdAndUpdate(id, medicine, {
