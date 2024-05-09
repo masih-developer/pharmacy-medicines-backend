@@ -2,7 +2,7 @@ const Yup = require("yup");
 
 const registerSchema = Yup.object({
   firstname: Yup.string()
-    .min(5, "firstname must be atleast 5 character")
+    .min(3, "firstname must be atleast 5 character")
     .max(20, "firstname must be maximum 20 character"),
   lastname: Yup.string()
     .min(5, "lastname must be atleast 5 character")
@@ -22,7 +22,7 @@ const registerSchema = Yup.object({
   password: Yup.string()
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
-    .max(20, "Password cannot exceed 20 characters")
+    .max(30, "Password cannot exceed 20 characters")
     .matches(/[a-zA-Z]/, "Password must contain at least one letter")
     .matches(/\d/, "Password must contain at least one number"),
 });
