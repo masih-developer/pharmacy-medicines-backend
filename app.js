@@ -7,8 +7,11 @@ const medicineRoutes = require("./routes/medicine.routes");
 const userRoutes = require("./routes/user.routes");
 
 const app = express();
+console.log(process.env.ALLOW_CORS_ORIGIN.split("|"));
 
-app.use(cors({ credentials: true, origin: process.env.ALLOW_CORS_ORIGIN }));
+app.use(
+  cors({ credentials: true, origin: process.env.ALLOW_CORS_ORIGIN.split("|") })
+);
 
 // body parser
 app.use(express.json());
