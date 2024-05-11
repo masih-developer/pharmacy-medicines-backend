@@ -11,7 +11,7 @@ const setAccessToken = async (res, user) => {
     domain:
       process.env.NODE_ENV === "development"
         ? "localhost"
-        : ".pharmacydomain.ir",
+        : process.env.COOKIE_DOMAIN,
   };
   const token = await generateToken(
     user,
@@ -31,7 +31,7 @@ const setRefreshToken = async (res, user) => {
     domain:
       process.env.NODE_ENV === "development"
         ? "localhost"
-        : ".pharmacydomain.ir",
+        : process.env.COOKIE_DOMAIN,
   };
   const token = await generateToken(
     user,
