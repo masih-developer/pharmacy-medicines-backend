@@ -8,22 +8,27 @@ const userRoutes = require("./routes/user.routes");
 
 const app = express();
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+app.use((req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://pharmacy-medicines-frontend.vercel.app"
   );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, DELETE, PUT, PATCH"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
 
-app.use(
-  cors({
-    credentials: true,
-    origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
-    optionsSuccessStatus: 200,
-  })
-);
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
+//     // optionsSuccessStatus: 200,
+//   })
+// );
 
 // body parser
 app.use(express.json());
