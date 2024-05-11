@@ -9,7 +9,17 @@ const userRoutes = require("./routes/user.routes");
 const app = express();
 
 app.use(
-  cors({ credentials: true, origin: process.env.ALLOW_CORS_ORIGIN.split("|") })
+  cors({
+    credentials: true,
+    origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
+    methods: "GET,PUT,POST,DELETE,PATCH,HEAD",
+    allowedHeaders: [
+      "Access-Control-Allow-Credentials",
+      "Access-Control-Allow-Origin",
+      "Access-Control-Allow-Methods",
+      "Access-Control-Allow-Headers",
+    ],
+  })
 );
 
 // body parser
