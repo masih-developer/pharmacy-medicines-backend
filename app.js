@@ -28,6 +28,7 @@ app.use(
       "Access-Control-Allow-Methods",
       "Access-Control-Allow-Headers",
     ],
+    optionsSuccessStatus: 200,
   })
 );
 
