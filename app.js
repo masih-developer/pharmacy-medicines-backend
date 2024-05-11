@@ -21,13 +21,6 @@ app.use(
   cors({
     credentials: true,
     origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
-    methods: "GET,PUT,POST,DELETE,PATCH,HEAD",
-    allowedHeaders: [
-      "Access-Control-Allow-Credentials",
-      "Access-Control-Allow-Origin",
-      "Access-Control-Allow-Methods",
-      "Access-Control-Allow-Headers",
-    ],
     optionsSuccessStatus: 200,
   })
 );
