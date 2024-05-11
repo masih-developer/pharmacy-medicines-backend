@@ -25,10 +25,13 @@ app.use((req, res, next) => {
 // app.use(
 //   cors({
 //     credentials: true,
-//     origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
+//     // origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
+//     origin: ["http://localhost:5173"],
 //     // optionsSuccessStatus: 200,
 //   })
 // );
+
+// app.use(cors({ credentials: true }));
 
 // body parser
 app.use(express.json());
