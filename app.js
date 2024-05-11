@@ -8,30 +8,27 @@ const userRoutes = require("./routes/user.routes");
 
 const app = express();
 
-app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "https://pharmacy-medicines-frontend.vercel.app"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, DELETE, PUT, PATCH"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader(
+//     "Access-Control-Allow-Origin",
+//     "https://pharmacy-medicines-frontend.vercel.app"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, DELETE, PUT, PATCH"
+//   );
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   next();
+// });
 
-// app.use(
-//   cors({
-//     credentials: true,
-//     // origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
-//     origin: ["http://localhost:5173"],
-//     // optionsSuccessStatus: 200,
-//   })
-// );
-
-// app.use(cors({ credentials: true }));
+app.use(
+  cors({
+    origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 
 // body parser
 app.use(express.json());
