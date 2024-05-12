@@ -6,12 +6,48 @@ const { medicineValidationSchema } = require("../validators/medicine");
 const mongoose = require("mongoose");
 
 const getAllMedicines = async (req, res) => {
-  const { page = 1, limit = 10, search = "" } = req.query;
+  const {
+    page = 1,
+    limit = 10,
+    search = "",
+    expire,
+    quantity,
+    price,
+    code,
+  } = req.query;
   const regexSearch = new RegExp(search, "i");
+
+  const sortQuery = {};
+
+  if (expire === "latest") {
+    sortQuery.expire = -1;
+  } else if (expire === "nearest") {
+    sortQuery.expire = 1;
+  }
+
+  if (quantity === "maximum") {
+    sortQuery.quantity = -1;
+  } else if (quantity === "minimum") {
+    sortQuery.quantity = 1;
+  }
+
+  if (price === "maximum") {
+    sortQuery.price = -1;
+  } else if (price === "minimum") {
+    sortQuery.price = 1;
+  }
+
+  sortQuery._id = -1;
+
+  if (code === "maximum") {
+    sortQuery.code = -1;
+  } else if (code === "minimum") {
+    sortQuery.code = 1;
+  }
 
   try {
     const medicines = await MedicineModel.find({ name: regexSearch })
-      .sort({ _id: -1 })
+      .sort({ ...sortQuery, _id: -1 })
       .limit(parseInt(limit))
       .skip((parseInt(page) - 1) * parseInt(limit));
 
@@ -50,7 +86,7 @@ const readMedicineFromXlsx = async (req, res) => {
     data = data.map((med) => {
       return {
         name: med["نام کالا"] || "",
-        expire: randomDate().toISOString(),
+        expire: new Date("2421-03-21"),
         code: med["کد کالا"] || 0,
         quantity: med["کل موجودي"] !== undefined ? med["کل موجودي"] : 0,
         price: med["قيمت1"] || 0,
