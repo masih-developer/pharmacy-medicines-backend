@@ -37,8 +37,6 @@ const getAllMedicines = async (req, res) => {
     sortQuery.price = 1;
   }
 
-  sortQuery._id = -1;
-
   if (code === "maximum") {
     sortQuery.code = -1;
   } else if (code === "minimum") {
