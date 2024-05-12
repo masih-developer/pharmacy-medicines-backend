@@ -7,7 +7,7 @@ const setAccessToken = async (res, user) => {
     httpOnly: true, // The cookie only accessible by the web server
     signed: true,
     sameSite: "Lax",
-    secure: process.env.NODE_ENV === "development" ? false : true,
+    secure: process.env.NODE_ENV === "production",
     domain:
       process.env.NODE_ENV === "development"
         ? "localhost"
@@ -27,7 +27,7 @@ const setRefreshToken = async (res, user) => {
     httpOnly: true, // The cookie only accessible by the web server
     signed: true,
     sameSite: "Lax",
-    secure: process.env.NODE_ENV === "development" ? false : true,
+    secure: process.env.NODE_ENV === "production",
     domain:
       process.env.NODE_ENV === "development"
         ? "localhost"
