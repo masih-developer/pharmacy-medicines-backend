@@ -8,6 +8,7 @@ const setAccessToken = async (res, user) => {
     signed: true,
     sameSite: "Lax",
     secure: process.env.NODE_ENV === "production",
+    domain: process.env.NODE_ENV === "development" ? "localhost" : undefined,
   };
   const token = await generateToken(
     user,
@@ -24,6 +25,7 @@ const setRefreshToken = async (res, user) => {
     signed: true,
     sameSite: "Lax",
     secure: process.env.NODE_ENV === "production",
+    domain: process.env.NODE_ENV === "development" ? "localhost" : undefined,
   };
   const token = await generateToken(
     user,
