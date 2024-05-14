@@ -107,7 +107,7 @@ const readMedicineFromXlsx = async (req, res) => {
       }
     }
 
-    res.json({ message: "success" });
+    res.json({ message: "تمامی موارد با موفقیت اضافه گردید." });
   } catch (error) {
     // Handle any parsing errors
     console.error("Error parsing XLSX file:", error);
