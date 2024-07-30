@@ -3,8 +3,8 @@ const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const cors = require("cors");
 // import routes
-const medicineRoutes = require("./routes/medicine.routes");
-const userRoutes = require("./routes/user.routes");
+const medicineRoutes = require("./routes/medicine");
+const userRoutes = require("./routes/user");
 
 const app = express();
 

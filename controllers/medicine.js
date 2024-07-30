@@ -1,6 +1,5 @@
-const MedicineModel = require("../models/medicine.model");
+const MedicineModel = require("../models/medicine");
 const xlsx = require("xlsx");
-const { randomDate } = require("../utils");
 const createHttpError = require("http-errors");
 const { medicineValidationSchema } = require("../validators/medicine");
 const mongoose = require("mongoose");
