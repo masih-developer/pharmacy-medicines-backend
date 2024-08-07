@@ -1,7 +1,7 @@
 const cookieParser = require("cookie-parser");
 const createHttpError = require("http-errors");
 const jwt = require("jsonwebtoken");
-const UserModel = require("../models/user.model");
+const UserModel = require("../models/user");
 
 async function verifyAccessToken(req, res, next) {
   try {

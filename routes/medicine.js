@@ -5,9 +5,9 @@ const {
   getAllMedicines,
   updateMedicine,
   deleteMedicine,
-} = require("../controllers/medicine.controller");
+} = require("../controllers/medicine");
 const multer = require("multer");
-const { verifyAccessToken } = require("../middleware/auth.middleware");
+const { verifyAccessToken } = require("../middleware/auth");
 const expressAsyncHandler = require("express-async-handler");
 
 const upload = multer();

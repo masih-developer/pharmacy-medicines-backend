@@ -6,8 +6,8 @@ const {
   getMeUser,
   getRefreshToken,
   getUserProfile,
-} = require("../controllers/user.controller");
-const { verifyAccessToken } = require("../middleware/auth.middleware");
+} = require("../controllers/user");
+const { verifyAccessToken } = require("../middleware/auth");
 
 const router = express.Router();
 
