@@ -1,9 +1,9 @@
-const UserModel = require("../models/user.model");
+const UserModel = require("../models/user");
 const { registerSchema, loginSchema } = require("../validators/auth/index");
 const bcrypt = require("bcrypt");
 const createHttpError = require("http-errors");
 const { setAccessToken, setRefreshToken } = require("../utils/auth");
-const { verifyRefreshToken } = require("../middleware/auth.middleware");
+const { verifyRefreshToken } = require("../middleware/auth");
 
 const registerUser = async (req, res) => {
   const { firstname, lastname, username, email, password } =
