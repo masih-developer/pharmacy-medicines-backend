@@ -1,4 +1,5 @@
-const Model = require("./models");
+import Model from "./index.js";
+
 class Medicine extends Model {
   constructor() {
     super("Medicine", {
@@ -33,4 +34,4 @@ class Medicine extends Model {
     });
   }
 }
-module.exports = new Medicine().getModel();
+export default new Medicine().getModel();

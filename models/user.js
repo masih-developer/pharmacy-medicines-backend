@@ -1,7 +1,7 @@
-const Model = require('./models')
+import Model from "./index.js";
 
-class User extends Model{
-  constructor(){
+class User extends Model {
+  constructor() {
     super("User", {
       firstname: {
         type: String,
@@ -31,4 +31,4 @@ class User extends Model{
     });
   }
 }
-module.exports = new User().getModel();
+export default new User().getModel();

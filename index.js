@@ -1,11 +1,12 @@
-const mongoose = require("mongoose");
-const app = require("./app");
+import { connect } from "mongoose";
+
+import app from "./app.js";
 
 const APP_PORT = process.env.PORT || 3000;
 
-(async()=>{
+(async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await connect(process.env.MONGODB_URI);
     console.log("✅Connected To Db Successfully :)");
     app.listen(APP_PORT, () => {
       console.log(`🚀Server Runnded on port ${APP_PORT}`);
@@ -15,4 +16,4 @@ const APP_PORT = process.env.PORT || 3000;
     console.log("❌Connected To Db Failed :)");
     process.exit(1);
   }
-})()
+})();

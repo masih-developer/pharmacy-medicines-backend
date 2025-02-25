@@ -1,15 +1,16 @@
-const express = require("express");
-const expressAsyncHandler = require("express-async-handler");
-const {
-  loginUser,
-  registerUser,
+import { Router } from "express";
+import expressAsyncHandler from "express-async-handler";
+
+import {
   getMeUser,
   getRefreshToken,
   getUserProfile,
-} = require("../controllers/user");
-const { verifyAccessToken } = require("../middleware/auth");
+  loginUser,
+  registerUser,
+} from "../controllers/user.js";
+import { verifyAccessToken } from "../middleware/auth.js";
 
-const router = express.Router();
+const router = Router();
 
 router.post("/register", expressAsyncHandler(registerUser));
 
@@ -21,4 +22,4 @@ router.get("/refresh", expressAsyncHandler(getRefreshToken));
 
 router.get("/profile", verifyAccessToken, expressAsyncHandler(getUserProfile));
 
-module.exports = router;
+export default router;

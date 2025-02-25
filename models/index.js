@@ -1,6 +1,6 @@
-const { Schema, model } = require("mongoose");
+import { model, Schema } from "mongoose";
 
-class Model {
+export default class Model {
   constructor(name, schemaDefinition) {
     this.schema = new Schema(schemaDefinition, { timestamps: true });
     this.model = model(name, this.schema);
@@ -9,5 +9,3 @@ class Model {
     return this.model;
   }
 }
-
-module.exports = Model;

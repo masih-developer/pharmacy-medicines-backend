@@ -1,4 +1,4 @@
-const yup = require("yup");
+import yup from "yup";
 
 const isoPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
@@ -23,4 +23,4 @@ const medicineValidationSchema = yup.object({
     .max(20, "نوع محصول می بایست حداکثر 20 کاراکتر باشد."),
 });
 
-module.exports = { medicineValidationSchema };
+export { medicineValidationSchema };

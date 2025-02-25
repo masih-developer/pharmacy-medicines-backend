@@ -1,9 +1,10 @@
-const UserModel = require("../models/user");
-const { registerSchema, loginSchema } = require("../validators/auth/index");
-const bcrypt = require("bcrypt");
-const createHttpError = require("http-errors");
-const { setAccessToken, setRefreshToken } = require("../utils/auth");
-const { verifyRefreshToken } = require("../middleware/auth");
+import { hash } from "bcrypt";
+import createHttpError from "http-errors";
+
+import { verifyRefreshToken } from "../middleware/auth.js";
+import UserModel from "../models/user.js";
+import { setAccessToken, setRefreshToken } from "../utils/auth.js";
+import { loginSchema, registerSchema } from "../validators/auth/index.js";
 
 const registerUser = async (req, res) => {
   const { firstname, lastname, username, email, password } =
@@ -17,7 +18,7 @@ const registerUser = async (req, res) => {
     throw createHttpError.Conflict("this user already registered");
   }
 
-  const hashedPass = await bcrypt.hash(password, 12);
+  const hashedPass = await hash(password, 12);
 
   const user = await UserModel.create({
     firstname,
@@ -38,7 +39,7 @@ const loginUser = async (req, res) => {
   const user = await UserModel.findOne({ email });
   if (!user)
     throw createHttpError.NotFound(
-      "user not found, email or password is incorrect!"
+      "user not found, email or password is incorrect!",
     );
   await setAccessToken(res, user);
   await setRefreshToken(res, user);
@@ -65,10 +66,4 @@ const getUserProfile = async (req, res) => {
   res.json(user);
 };
 
-module.exports = {
-  registerUser,
-  loginUser,
-  getMeUser,
-  getRefreshToken,
-  getUserProfile,
-};
+export { getMeUser, getRefreshToken, getUserProfile, loginUser, registerUser };

@@ -1,5 +1,23 @@
-const createError = require("http-errors");
-const jwt = require("jsonwebtoken");
+import createHttpError from "http-errors";
+import jwt from "jsonwebtoken";
+
+const generateToken = (user, expiresIn, secret) => {
+  return new Promise((reslove, reject) => {
+    jwt.sign(
+      { email: user.email },
+      secret || process.env.TOKEN_SECRET_KEY,
+      {
+        expiresIn,
+      },
+      (error, token) => {
+        if (error) {
+          reject(createHttpError.InternalServerError("Internal Server Error!"));
+        }
+        reslove(token);
+      },
+    );
+  });
+};
 
 const setAccessToken = async (res, user) => {
   const cookieOptions = {
@@ -13,7 +31,7 @@ const setAccessToken = async (res, user) => {
   const token = await generateToken(
     user,
     "24h",
-    process.env.ACCESS_TOKEN_SECRET_KEY
+    process.env.ACCESS_TOKEN_SECRET_KEY,
   );
   res.cookie("accessToken", token, cookieOptions);
 };
@@ -30,31 +48,9 @@ const setRefreshToken = async (res, user) => {
   const token = await generateToken(
     user,
     "1y",
-    process.env.REFRESH_TOKEN_SECRET_KEY
+    process.env.REFRESH_TOKEN_SECRET_KEY,
   );
   res.cookie("refreshToken", token, cookieOptions);
 };
 
-const generateToken = (user, expiresIn, secret) => {
-  return new Promise((reslove, reject) => {
-    jwt.sign(
-      { email: user.email },
-      secret || process.env.TOKEN_SECRET_KEY,
-      {
-        expiresIn,
-      },
-      (error, token) => {
-        if (error) {
-          reject(createError.InternalServerError("Internal Server Error!"));
-        }
-        reslove(token);
-      }
-    );
-  });
-};
-
-module.exports = {
-  setAccessToken,
-  setRefreshToken,
-  generateToken,
-};
+export { generateToken, setAccessToken, setRefreshToken };

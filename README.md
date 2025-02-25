@@ -19,9 +19,9 @@ A backend system designed for managing pharmacy inventories. This project allows
 
 ## Technologies Used
 
-- **Backend Framework**: [Express.js](https://expressjs.com/)  
-- **Database**: [MongoDB](https://www.mongodb.com/)  
-- **Excel Parsing**: [xlsx](https://www.npmjs.com/package/xlsx)  
+- **Backend Framework**: [Express.js](https://expressjs.com/)
+- **Database**: [MongoDB](https://www.mongodb.com/)
+- **Excel Parsing**: [xlsx](https://www.npmjs.com/package/xlsx)
 
 ---
 
@@ -33,6 +33,7 @@ Follow these steps to set up and run the project locally:
    ```bash
    git clone https://github.com/yourusername/pharmacy-medicines-backend.git
    cd pharmacy-medicines-backend
+   ```
 2. Install dependencies:
    npm install
 

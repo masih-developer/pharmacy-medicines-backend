@@ -1,8 +1,18 @@
-const MedicineModel = require("../models/medicine");
-const xlsx = require("xlsx");
-const createHttpError = require("http-errors");
-const { medicineValidationSchema } = require("../validators/medicine");
-const mongoose = require("mongoose");
+import createHttpError from "http-errors";
+import { isValidObjectId } from "mongoose";
+import { read, utils } from "xlsx";
+
+import MedicineModel from "../models/medicine.js";
+import { medicineValidationSchema } from "../validators/medicine/index.js";
+
+const {
+  countDocuments,
+  create,
+  find,
+  findByIdAndDelete,
+  findByIdAndUpdate,
+  findOne,
+} = MedicineModel;
 
 const getAllMedicines = async (req, res) => {
   const {
@@ -43,15 +53,15 @@ const getAllMedicines = async (req, res) => {
   }
 
   try {
-    const medicines = await MedicineModel.find({ name: regexSearch })
+    const medicines = await find({ name: regexSearch })
       .sort({ ...sortQuery, _id: -1 })
-      .limit(parseInt(limit))
-      .skip((parseInt(page) - 1) * parseInt(limit));
+      .limit(parseInt(limit, 10))
+      .skip((parseInt(page, 10) - 1) * parseInt(limit, 10));
 
-    const totalDocuments = await MedicineModel.countDocuments({
+    const totalDocuments = await countDocuments({
       name: regexSearch,
     });
-    const totalPage = Math.ceil(totalDocuments / parseInt(limit));
+    const totalPage = Math.ceil(totalDocuments / parseInt(limit, 10));
 
     res.json({ medicines, totalPage, currentPage: +page });
   } catch (error) {
@@ -62,10 +72,10 @@ const getAllMedicines = async (req, res) => {
 
 const createMedicine = async (req, res) => {
   const medicine = await medicineValidationSchema.validate(req.body);
-  const medicineExist = await MedicineModel.findOne({ code: medicine.code });
+  const medicineExist = await findOne({ code: medicine.code });
   if (medicineExist)
     throw createHttpError.Conflict("این کد کالا قبلاً ثبت شده است!");
-  await MedicineModel.create(medicine);
+  await create(medicine);
   res.status(200).json(medicine);
 };
 
@@ -73,12 +83,12 @@ const readMedicineFromXlsx = async (req, res) => {
   const fileBuffer = req.file.buffer;
 
   try {
-    const workbook = xlsx.read(fileBuffer, { type: "buffer" });
+    const workbook = read(fileBuffer, { type: "buffer" });
 
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
 
-    let data = xlsx.utils.sheet_to_json(sheet);
+    let data = utils.sheet_to_json(sheet);
 
     data = data.map((med) => {
       return {
@@ -97,9 +107,7 @@ const readMedicineFromXlsx = async (req, res) => {
       try {
         const medicine = new MedicineModel(record);
 
-        const savedMedicine = await medicine.save();
-
-        results.push(savedMedicine);
+        results.push(await medicine.save());
       } catch (error) {
         console.error("Error saving medicine record:", error);
         results.push({ error: error.message, record });
@@ -117,12 +125,12 @@ const readMedicineFromXlsx = async (req, res) => {
 const updateMedicine = async (req, res) => {
   const { id } = req.params;
 
-  if (!mongoose.isValidObjectId(id))
+  if (!isValidObjectId(id))
     throw createHttpError("آیدی محصول نامعتبر می باشد!");
 
   const medicine = await medicineValidationSchema.validate(req.body);
 
-  const updatedMedicine = await MedicineModel.findByIdAndUpdate(id, medicine, {
+  const updatedMedicine = await findByIdAndUpdate(id, medicine, {
     new: true,
   });
 
@@ -134,10 +142,10 @@ const updateMedicine = async (req, res) => {
 
 const deleteMedicine = async (req, res) => {
   const { id } = req.params;
-  if (!mongoose.isValidObjectId(id))
+  if (!isValidObjectId(id))
     throw createHttpError("آیدی محصول نامعتبر می باشد!");
 
-  const deletedMedicine = await MedicineModel.findByIdAndDelete(id);
+  const deletedMedicine = await findByIdAndDelete(id);
 
   if (!deletedMedicine)
     throw createHttpError.NotFound("محصول مورد نظر پیدا نشد!");
@@ -145,10 +153,10 @@ const deleteMedicine = async (req, res) => {
   res.json({ message: "محصول مورد نظر با موفقیت حذف گردید." });
 };
 
-module.exports = {
+export {
   createMedicine,
-  readMedicineFromXlsx,
-  getAllMedicines,
-  updateMedicine,
   deleteMedicine,
+  getAllMedicines,
+  readMedicineFromXlsx,
+  updateMedicine,
 };
