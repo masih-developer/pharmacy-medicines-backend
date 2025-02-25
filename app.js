@@ -2,25 +2,12 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const cors = require("cors");
+
 // import routes
 const medicineRoutes = require("./routes/medicine");
 const userRoutes = require("./routes/user");
 
 const app = express();
-
-// app.use((req, res, next) => {
-//   res.setHeader(
-//     "Access-Control-Allow-Origin",
-//     "https://pharmacy-medicines-frontend.vercel.app"
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, DELETE, PUT, PATCH"
-//   );
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   res.setHeader("Access-Control-Allow-Credentials", "true");
-//   next();
-// });
 
 app.use(
   cors({
