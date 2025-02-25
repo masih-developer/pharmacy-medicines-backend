@@ -90,7 +90,6 @@ const readMedicineFromXlsx = async (req, res) => {
       type: med["واحد اصلي"] || "",
     }));
 
-    // ذخیره‌سازی هم‌زمان تمام داده‌ها
     const results = await Promise.all(
       data.map(async (record) => {
         try {
