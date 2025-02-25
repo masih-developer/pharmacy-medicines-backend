@@ -5,15 +5,6 @@ import { read, utils } from "xlsx";
 import MedicineModel from "../models/medicine.js";
 import { medicineValidationSchema } from "../validators/medicine/index.js";
 
-const {
-  countDocuments,
-  create,
-  find,
-  findByIdAndDelete,
-  findByIdAndUpdate,
-  findOne,
-} = MedicineModel;
-
 const getAllMedicines = async (req, res) => {
   const {
     page = 1,
@@ -58,7 +49,7 @@ const getAllMedicines = async (req, res) => {
       .limit(parseInt(limit, 10))
       .skip((parseInt(page, 10) - 1) * parseInt(limit, 10));
 
-    const totalDocuments = await countDocuments({
+    const totalDocuments = await MedicineModel.countDocuments({
       name: regexSearch,
     });
     const totalPage = Math.ceil(totalDocuments / parseInt(limit, 10));
@@ -72,10 +63,10 @@ const getAllMedicines = async (req, res) => {
 
 const createMedicine = async (req, res) => {
   const medicine = await medicineValidationSchema.validate(req.body);
-  const medicineExist = await findOne({ code: medicine.code });
+  const medicineExist = await MedicineModel.findOne({ code: medicine.code });
   if (medicineExist)
     throw createHttpError.Conflict("این کد کالا قبلاً ثبت شده است!");
-  await create(medicine);
+  await MedicineModel.create(medicine);
   res.status(200).json(medicine);
 };
 
@@ -90,33 +81,30 @@ const readMedicineFromXlsx = async (req, res) => {
 
     let data = utils.sheet_to_json(sheet);
 
-    data = data.map((med) => {
-      return {
-        name: med["نام کالا"] || "",
-        expire: new Date("2421-03-21"),
-        code: med["کد کالا"] || 0,
-        quantity: med["کل موجودي"] !== undefined ? med["کل موجودي"] : 0,
-        price: med["قيمت1"] || 0,
-        type: med["واحد اصلي"] || "",
-      };
-    });
+    data = data.map((med) => ({
+      name: med["نام کالا"] || "",
+      expire: new Date("2421-03-21"),
+      code: med["کد کالا"] || 0,
+      quantity: med["کل موجودي"] !== undefined ? med["کل موجودي"] : 0,
+      price: med["قيمت1"] || 0,
+      type: med["واحد اصلي"] || "",
+    }));
 
-    const results = [];
+    // ذخیره‌سازی هم‌زمان تمام داده‌ها
+    const results = await Promise.all(
+      data.map(async (record) => {
+        try {
+          const medicine = new MedicineModel(record);
+          return await medicine.save();
+        } catch (error) {
+          console.error("Error saving medicine record:", error);
+          return { error: error.message, record };
+        }
+      }),
+    );
 
-    for (const record of data) {
-      try {
-        const medicine = new MedicineModel(record);
-
-        results.push(await medicine.save());
-      } catch (error) {
-        console.error("Error saving medicine record:", error);
-        results.push({ error: error.message, record });
-      }
-    }
-
-    res.json({ message: "تمامی موارد با موفقیت اضافه گردید." });
+    res.json({ message: "تمامی موارد با موفقیت اضافه گردید.", results });
   } catch (error) {
-    // Handle any parsing errors
     console.error("Error parsing XLSX file:", error);
     res.status(500).send("Error parsing XLSX file");
   }
@@ -130,7 +118,7 @@ const updateMedicine = async (req, res) => {
 
   const medicine = await medicineValidationSchema.validate(req.body);
 
-  const updatedMedicine = await findByIdAndUpdate(id, medicine, {
+  const updatedMedicine = await MedicineModel.findByIdAndUpdate(id, medicine, {
     new: true,
   });
 
@@ -145,7 +133,7 @@ const deleteMedicine = async (req, res) => {
   if (!isValidObjectId(id))
     throw createHttpError("آیدی محصول نامعتبر می باشد!");
 
-  const deletedMedicine = await findByIdAndDelete(id);
+  const deletedMedicine = await MedicineModel.findByIdAndDelete(id);
 
   if (!deletedMedicine)
     throw createHttpError.NotFound("محصول مورد نظر پیدا نشد!");

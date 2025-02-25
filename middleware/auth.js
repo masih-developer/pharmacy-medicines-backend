@@ -47,7 +47,7 @@ function verifyRefreshToken(req) {
     process.env.COOKIE_PARSER_SECRET_KEY,
   );
   return new Promise((resolve, reject) => {
-    verify(
+    jwt.verify(
       token,
       process.env.REFRESH_TOKEN_SECRET_KEY,
       async (err, payload) => {
