@@ -8,7 +8,7 @@ const APP_PORT = process.env.PORT || 3000;
   try {
     await connect(process.env.MONGODB_URI);
     console.log("✅Connected To Db Successfully :)");
-    app.listen(APP_PORT, () => {
+    app.listen(APP_PORT, "0.0.0.0", () => {
       console.log(`🚀Server Runnded on port ${APP_PORT}`);
     });
   } catch (error) {
