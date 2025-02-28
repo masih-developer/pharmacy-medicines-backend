@@ -4,5 +4,5 @@ COPY package*.json .
 RUN npm install
 COPY . .
 EXPOSE 3000
-CMD ["node", "--env-file=.env.local", "--watch", "index.js"]
+CMD [ "node", "index.js" ]
 

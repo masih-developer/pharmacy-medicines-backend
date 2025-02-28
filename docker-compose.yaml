@@ -1,0 +1,13 @@
+version: "3.8"
+name: pharmacy
+services:
+  backend:
+    build: .
+    ports:
+      - 3000:3000
+    env_file:
+      - .env.local
+  database:
+    image: mongo:6.0.12-jammy
+    ports:
+      - 27017:27017
