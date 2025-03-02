@@ -6,6 +6,8 @@ services:
       - 3000:3000
     env_file:
       - .env
+    environment:
+      - MONGODB_URI=mongodb://database:27017/pharmacy-medicine
   database:
     image: mongo:6.0.12-jammy
     ports:
