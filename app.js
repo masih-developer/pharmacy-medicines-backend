@@ -27,7 +27,7 @@ app.use("/api/user", userRoutes);
 
 // Not Found Route
 app.use((req, res, next) => {
-  next(createHttpError.NotFound("آدرس مورد نظر یافت نشد."));
+  next(createHttpError.NotFound("The requested address was not found."));
 });
 
 app.use((error, req, res, next) => {
