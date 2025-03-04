@@ -2,5 +2,6 @@
   "printWidth": 80,
   "singleQuote": false,
   "semi": true,
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "jsxSingleQuote": false
 }
