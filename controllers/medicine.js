@@ -44,7 +44,7 @@ const getAllMedicines = async (req, res) => {
   }
 
   try {
-    const medicines = await find({ name: regexSearch })
+    const medicines = await MedicineModel.find({ name: regexSearch })
       .sort({ ...sortQuery, _id: -1 })
       .limit(parseInt(limit, 10))
       .skip((parseInt(page, 10) - 1) * parseInt(limit, 10));
