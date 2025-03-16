@@ -1,11 +1,13 @@
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
 
+import Env from "../config/Env.js";
+
 const generateToken = (user, expiresIn, secret) => {
   return new Promise((reslove, reject) => {
     jwt.sign(
       { email: user.email },
-      secret || process.env.TOKEN_SECRET_KEY,
+      secret || Env.get("tokenSecretKey"),
       {
         expiresIn,
       },
@@ -25,13 +27,13 @@ const setAccessToken = async (res, user) => {
     httpOnly: true, // The cookie only accessible by the web server
     signed: true,
     sameSite: "Lax",
-    secure: process.env.NODE_ENV === "production",
-    domain: process.env.NODE_ENV === "development" ? "localhost" : undefined,
+    secure: Env.get("nodeEnv") === "production",
+    domain: Env.get("nodeEnv") === "development" ? "localhost" : undefined,
   };
   const token = await generateToken(
     user,
     "24h",
-    process.env.ACCESS_TOKEN_SECRET_KEY,
+    Env.get("accessTokenSecretKey"),
   );
   res.cookie("accessToken", token, cookieOptions);
 };
@@ -42,13 +44,13 @@ const setRefreshToken = async (res, user) => {
     httpOnly: true, // The cookie only accessible by the web server
     signed: true,
     sameSite: "Lax",
-    secure: process.env.NODE_ENV === "production",
-    domain: process.env.NODE_ENV === "development" ? "localhost" : undefined,
+    secure: Env.get("nodeEnv") === "production",
+    domain: Env.get("nodeEnv") === "development" ? "localhost" : undefined,
   };
   const token = await generateToken(
     user,
     "1y",
-    process.env.REFRESH_TOKEN_SECRET_KEY,
+    Env.get("refreshTokenSecretKey"),
   );
   res.cookie("refreshToken", token, cookieOptions);
 };

@@ -12,7 +12,7 @@ const schema = new Config({
   port: Config.number({ default: 5000 }),
 });
 
-const config = schema.parse({
+const Env = schema.parse({
   tokenSecretKey: process.env.TOKEN_SECRET_KEY,
   accessTokenSecretKey: process.env.ACCESS_TOKEN_SECRET_KEY,
   refreshTokenSecretKey: process.env.REFRESH_TOKEN_SECRET_KEY,
@@ -23,4 +23,4 @@ const config = schema.parse({
   port: process.env.PORT ? Number(process.env.PORT) : undefined,
 });
 
-export default config;
+export default Env;

@@ -3,7 +3,7 @@ import cors from "cors";
 import express, { json } from "express";
 import createHttpError from "http-errors";
 
-// import routes
+import Env from "./config/Env.js";
 import medicineRoutes from "./routes/medicine.js";
 import userRoutes from "./routes/user.js";
 
@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.ALLOW_CORS_ORIGIN.split("|"),
+    origin: Env.get("allowCorsOrigin").split("|"),
     credentials: true,
     optionsSuccessStatus: 200,
   }),
@@ -19,7 +19,7 @@ app.use(
 
 // body parser
 app.use(json());
-app.use(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY));
+app.use(cookieParser(Env.get("cookieParserSecretKey")));
 
 // routes handling
 app.use("/api/medicines", medicineRoutes);
@@ -30,7 +30,7 @@ app.use((req, res, next) => {
   next(createHttpError.NotFound("The requested address was not found."));
 });
 
-app.use((error, req, res, next) => {
+app.use((error, req, res) => {
   console.error(error);
 
   let statusCode;
