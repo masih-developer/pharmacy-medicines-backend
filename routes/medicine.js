@@ -14,6 +14,21 @@ import { verifyAccessToken } from "../middleware/auth.js";
 const upload = multer();
 const router = Router();
 
+/**
+ * @openapi
+ * /api/medicines:
+ *   get:
+ *     tags:
+ *       - Medicine
+ *     summary: get all Medicines.
+ *     description: get all medicines.
+ *     responses:
+ *       200:
+ *         description: return an Array of Medicines.
+ *   post:
+ *     tags:
+ *       - Medicine
+ */
 router.get("/", verifyAccessToken, expressAsyncHandler(getAllMedicines));
 
 router.post("/", verifyAccessToken, expressAsyncHandler(createMedicine));
